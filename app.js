@@ -22,6 +22,11 @@ app.use(requestRateLimitConfig);
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
+app.get("/", (req,res) =>{
+  res.send("Server is runing");
+})
+
+
 const api = process.env.API_URL;
 app.use(`${api}/auth`, authRoutes);
 app.use(`${api}/singers`, userRoutes);
