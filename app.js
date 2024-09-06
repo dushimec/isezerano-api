@@ -4,9 +4,11 @@ import userRoutes from "./src/routes/userRoutes.js";
 import attendanceRoutes from "./src/routes/attendanceRoutes.js";
 import disciplineRoutes from "./src/routes/disciplineRoutes.js";
 import adminRoutes from "./src/routes/adminRoutes.js";
-import { authMiddleware } from "./src/middlewares/authMiddleware.js";
+import requestRateLimitConfig from "./src/config/rateLimit.js";
+import morgan from "morgan";
 import { config } from "dotenv";
 import cron from "node-cron";
+import cors from "cors";
 import { dbConnection } from "./src/config/db.js";
 dbConnection();
 
@@ -14,16 +16,18 @@ config();
 
 const app = express();
 app.use(express.json());
+app.use(morgan("dev"));
+app.options("*", cors());
+app.use(requestRateLimitConfig);
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
-// app.use(authMiddleware);
-const api = process.env.API_URL
+const api = process.env.API_URL;
 app.use(`${api}/auth`, authRoutes);
 app.use(`${api}/singers`, userRoutes);
 app.use(`${api}/attendance`, attendanceRoutes);
 app.use(`${api}/discipline`, disciplineRoutes);
 app.use(`${api}/admin`, adminRoutes);
-
-
 
 cron.schedule("0 0 * * 2,4", async () => {
   console.log("Generating attendance list for today");
