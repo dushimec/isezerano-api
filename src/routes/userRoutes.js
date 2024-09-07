@@ -17,6 +17,6 @@ router.post("/add-singer", roleMiddleware(["Secretary"]), addSinger);
 router.put("/singers/:userId", roleMiddleware(["Secretary"]), updateSinger);
 router.delete("/singers/:userId", roleMiddleware(["Secretary"]), deleteSinger);
 router.get("/singers", roleMiddleware(["Secretary"]), getAllSingers);
-router.get("/profile/:userId", roleMiddleware(["Singer"]), getSingerProfile);
+router.get("/profile", roleMiddleware(["Singer"]), getSingerProfile);
 
 export default router;

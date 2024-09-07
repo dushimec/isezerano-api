@@ -49,7 +49,7 @@ export const getAllSingers = async (req, res) => {
 
 export const getSingerProfile = async (req, res) => {
   try {
-    const { userId } = req.params;
+    const { userId } = req.user;
     const profile = await fetchSingerProfile(userId);
     const attendance = await fetchAttendanceForUser(userId);
     res.status(200).json({ profile, attendance });
